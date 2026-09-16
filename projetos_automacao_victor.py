@@ -3,7 +3,6 @@ import time
 import json
 import threading
 import flet as ft
-from flet import app as ft_app
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -457,6 +456,7 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.DARK
     page.padding = 20
 
+    # Título Principal
     header_title = ft.Text(
         "⚙️ Automações GymFit", 
         size=22, 
@@ -473,16 +473,19 @@ def main(page: ft.Page):
         color="white",
         on_click=lambda e: rodar_em_thread(bot_engine.automacao_login, ent_user.value, ent_pass.value)
     )
-    tab_login_content = ft.Column(
-        [
-            ent_user,
-            ent_pass,
-            ft.Container(height=10),
-            btn_login
-        ],
-        spacing=15,
-        alignment=ft.MainAxisAlignment.CENTER,
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+    tab_login_content = ft.Container(
+        content=ft.Column(
+            [
+                ent_user,
+                ent_pass,
+                ft.Container(height=10),
+                btn_login
+            ],
+            spacing=15,
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        ),
+        padding=20
     )
 
     # --- ABA 2: PLANOS ---
@@ -499,16 +502,19 @@ def main(page: ft.Page):
         color="white",
         on_click=lambda e: rodar_em_thread(bot_engine.automacao_assinar_plano, radio_planos.value)
     )
-    tab_planos_content = ft.Column(
-        [
-            ft.Text("Escolha o Plano para Testar:", size=16),
-            radio_planos,
-            ft.Container(height=10),
-            btn_plano
-        ],
-        spacing=15,
-        alignment=ft.MainAxisAlignment.CENTER,
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+    tab_planos_content = ft.Container(
+        content=ft.Column(
+            [
+                ft.Text("Escolha o Plano para Testar:", size=16),
+                radio_planos,
+                ft.Container(height=10),
+                btn_plano
+            ],
+            spacing=15,
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        ),
+        padding=20
     )
 
     # --- ABA 3: AULAS ---
@@ -528,15 +534,18 @@ def main(page: ft.Page):
         color="white",
         on_click=lambda e: rodar_em_thread(bot_engine.automacao_agendar_aula, drop_aulas.value)
     )
-    tab_aulas_content = ft.Column(
-        [
-            drop_aulas,
-            ft.Container(height=10),
-            btn_aula
-        ],
-        spacing=15,
-        alignment=ft.MainAxisAlignment.CENTER,
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+    tab_aulas_content = ft.Container(
+        content=ft.Column(
+            [
+                drop_aulas,
+                ft.Container(height=10),
+                btn_aula
+            ],
+            spacing=15,
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        ),
+        padding=20
     )
 
     # --- ABA 4: CHATBOT ---
@@ -547,45 +556,41 @@ def main(page: ft.Page):
         color="white",
         on_click=lambda e: rodar_em_thread(bot_engine.automacao_chatbot, ent_chat.value)
     )
-    tab_chat_content = ft.Column(
-        [
-            ent_chat,
-            ft.Container(height=10),
-            btn_chat
-        ],
-        spacing=15,
-        alignment=ft.MainAxisAlignment.CENTER,
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+    tab_chat_content = ft.Container(
+        content=ft.Column(
+            [
+                ent_chat,
+                ft.Container(height=10),
+                btn_chat
+            ],
+            spacing=15,
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        ),
+        padding=20
     )
 
-    conteudos = [tab_login_content, tab_planos_content, tab_aulas_content, tab_chat_content]
-    conteudo_container = ft.Container(content=conteudos[0], padding=20)
-
-    def trocar_aba(e):
-        conteudo_container.content = conteudos[e.control.selected_index]
-        page.update()
-
+    # NAVEGAÇÃO POR ABAS (Tabs)
     tabs = ft.Tabs(
         selected_index=0,
         animation_duration=300,
         indicator_color="#ff4500",
         label_color="#ff4500",
         unselected_label_color="white",
-        on_change=trocar_aba,
         tabs=[
-            ft.Tab(text="🔑 Login"),
-            ft.Tab(text="💳 Planos"),
-            ft.Tab(text="🏋️ Aulas"),
-            ft.Tab(text="💬 Chatbot"),
-        ]
+            ft.Tab(text="🔑 Login", content=tab_login_content),
+            ft.Tab(text="💳 Planos", content=tab_planos_content),
+            ft.Tab(text="🏋️ Aulas", content=tab_aulas_content),
+            ft.Tab(text="💬 Chatbot", content=tab_chat_content),
+        ],
+        expand=True
     )
 
     page.add(
         ft.Column(
             [
                 header_title,
-                tabs,
-                conteudo_container
+                tabs
             ],
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             expand=True
