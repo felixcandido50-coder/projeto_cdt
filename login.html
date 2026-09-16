@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>GymFit - Área do Aluno</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #121212; color: #ffffff; line-height: 1.6; }
+        header { background-color: #1e1e1e; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ff4500; }
+        .logo { font-size: 28px; font-weight: bold; color: #ff4500; text-transform: uppercase; }
+        nav a { color: #ffffff; text-decoration: none; margin-left: 20px; font-weight: 500; }
+        nav a:hover, nav a.active { color: #ff4500; }
+        .form-container { max-width: 400px; margin: 60px auto; background-color: #1e1e1e; padding: 30px; border-radius: 8px; text-align: center; }
+        .form-container h2 { margin-bottom: 20px; color: #ff4500; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 5px; font-size: 14px; }
+        .input-group input { width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #333; background-color: #121212; color: #fff; }
+        .btn-submit { width: 100%; background-color: #ff4500; color: #fff; padding: 10px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .btn-submit:hover { background-color: #e03e00; }
+        #mensagem-login { display: none; margin-top: 15px; padding: 10px; border-radius: 4px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">GymFit</div>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="planos.html">Planos</a>
+            <a href="aulas.html">Agendar Aulas</a>
+            <a href="login.html" class="active">Área do Aluno</a>
+        </nav>
+    </header>
+
+    <div class="form-container">
+        <h2>Área do Aluno</h2>
+        <form id="form-login" onsubmit="realizarLogin(event)">
+            <div class="input-group">
+                <label for="username">Usuário ou CPF</label>
+                <input type="text" id="username" name="username" placeholder="Digite seu usuário" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+            </div>
+            <button type="submit" id="btn-entrar" class="btn-submit">Entrar</button>
+        </form>
+        <div id="mensagem-login"></div>
+    </div>
+
+    <script>
+        function realizarLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('username').value;
+            const msg = document.getElementById('mensagem-login');
+            msg.style.display = 'block';
+            msg.style.background = '#28a745';
+            msg.style.color = '#fff';
+            msg.innerText = 'Bem-vindo(a), ' + user + '! Login autenticado com sucesso.';
+        }
+    </script>
+</body>
+</html>

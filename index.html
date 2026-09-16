@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>GymFit - Sua Academia de Alta Performance</title>
+    <style>
+         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0800a2; color: #ffffff; line-height: 1.6; }
+        header { background-color: #0003b3; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #003cff; }
+        .logo { font-size: 28px; font-weight: bold; color: #1e52ed; text-transform: uppercase; }
+        nav a { color: #ffffff; text-decoration: none; margin-left: 20px; font-weight: 500; }
+        nav a:hover, nav a.active { color: #00bbff; }
+        .container { max-width: 800px; margin: 40px auto; padding: 20px; background: #1e1e1e; border-radius: 8px; }
+        h1 { color: #040081; text-align: center; margin-bottom: 20px; }
+        .grid-aulas { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .aula-box { background: #121212; padding: 20px; border-radius: 8px; border: 1px solid #000b82; text-align: center; }
+        .aula-box h3 { color: #090d7f; margin-bottom: 10px; }
+        .btn-reservar { background: #00e5ff; color: #fff; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+        .btn-reservar:hover { background: #0047c1; }
+        #reserva-confirmada { display: none; background: #110094; color: #fff; padding: 15px; text-align: center; margin-top: 20px; border-radius: 5px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">FitFlow</div>
+        <nav>
+            <a href="index.html" class="active">Início</a>
+            <a href="planos.html">Planos</a>
+            <a href="aulas.html">Agendar Aulas</a>
+            <a href="login.html">Área do Aluno</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Transforme Seu Corpo e Mente</h1>
+        <p>A melhor estrutura e os melhores profissionais à sua disposição.</p>
+        <a href="planos.html" class="btn-principal" id="btn-conhecer-planos">Conheça Nossos Planos</a>
+    </section>
+
+    <!-- CHATBOT FLUTUANTE INTEGRADO -->
+    <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; width: 320px; background: #1e1e1e; border: 2px solid #ff4500; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 9999;">
+        <div id="chat-header" style="background: #ff4500; color: #fff; padding: 10px 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+            <span>🤖 Assistente GymFit</span>
+            <span id="chat-status" style="font-size: 11px; background: #28a745; padding: 2px 6px; border-radius: 4px;">Online</span>
+        </div>
+        <div id="chat-box" style="height: 220px; padding: 10px; overflow-y: auto; background: #141414; display: flex; flex-direction: column; gap: 8px;">
+            <div class="bot-msg" style="background: #2a2a2a; color: #fff; padding: 8px 12px; border-radius: 8px; max-width: 85%; align-self: flex-start; font-size: 13px;">
+                Olá! Sou o assistente virtual da GymFit. Como posso te ajudar hoje?
+            </div>
+        </div>
+        <div style="display: flex; border-top: 1px solid #333;">
+            <input type="text" id="chat-input" placeholder="Digite sua mensagem..." style="flex: 1; padding: 10px; background: #1e1e1e; border: none; color: #fff; font-size: 13px; outline: none;">
+            <button id="btn-chat-enviar" style="background: #ff4500; border: none; color: #fff; padding: 10px 15px; cursor: pointer; font-weight: bold;">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        const chatInput = document.getElementById('chat-input');
+        const btnEnviar = document.getElementById('btn-chat-enviar');
+        const chatBox = document.getElementById('chat-box');
+
+        function adicionarMensagem(texto, sender) {
+            const msgDiv = document.createElement('div');
+            msgDiv.style.padding = '8px 12px';
+            msgDiv.style.borderRadius = '8px';
+            msgDiv.style.maxWidth = '85%';
+            msgDiv.style.fontSize = '13px';
+            msgDiv.style.marginBottom = '5px';
+
+            if(sender === 'user') {
+                msgDiv.style.background = '#ff4500';
+                msgDiv.style.color = '#fff';
+                msgDiv.style.alignSelf = 'flex-end';
+                msgDiv.className = 'user-msg';
+            } else {
+                msgDiv.style.background = '#2a2a2a';
+                msgDiv.style.color = '#fff';
+                msgDiv.style.alignSelf = 'flex-start';
+                msgDiv.className = 'bot-msg';
+            }
+
+            msgDiv.innerText = texto;
+            chatBox.appendChild(msgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function responderBot(msg) {
+            let resposta = "Desculpe, não entendi. Você pode perguntar sobre 'horário', 'planos', 'preço' ou 'modalidades'.";
+            const texto = msg.toLowerCase();
+
+            if (texto.includes('olá') || texto.includes('oi') || texto.includes('bom dia')) {
+                resposta = "Olá! Seja bem-vindo à GymFit. Em que posso ajudar?";
+            } else if (texto.includes('horário') || texto.includes('funciona')) {
+                resposta = "Funcionamos de segunda a sexta das 06:00 às 23:00, e sábados das 08:00 às 16:00.";
+            } else if (texto.includes('plano') || texto.includes('preço') || texto.includes('valor')) {
+                resposta = "Temos o Plano Mensal (R$ 99/mês) e o Plano VIP (R$ 149/mês). Veja na página de Planos!";
+            } else if (texto.includes('aula') || texto.includes('agendar')) {
+                resposta = "Você pode agendar aulas de Crossfit, Spinning e Pilates na aba 'Agendar Aulas'.";
+            }
+
+            setTimeout(() => {
+                adicionarMensagem(resposta, 'bot');
+            }, 600);
+        }
+
+        btnEnviar.addEventListener('click', () => {
+            const texto = chatInput.value.trim();
+            if (texto) {
+                adicionarMensagem(texto, 'user');
+                chatInput.value = '';
+                responderBot(texto);
+            }
+        });
+
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') btnEnviar.click();
+        });
+    </script>
+
+    <footer>
+        <p>&copy; 2026 GymFit. Todos os direitos reservados.</p>
+    </footer>
+</body>
+</html>
